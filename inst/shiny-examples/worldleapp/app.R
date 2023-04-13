@@ -58,7 +58,7 @@ ui <- fluidPage(
     sidebarLayout(
 
       # Action button
-      actionButton("action", label = "Start"),
+      actionButton("shiny_start", label = "Start"),
 
 
         sidebarPanel(
@@ -91,3 +91,4 @@ server <- function(input, output) {
 
 # Run the application
 shinyApp(ui = ui, server = server)
+
