@@ -15,7 +15,8 @@ Imports:
     ggplot2,
     dplyr,
     stringr,
-    lubridate
+    lubridate,
+    shiny
 Suggests:
     covr,
     knitr,
