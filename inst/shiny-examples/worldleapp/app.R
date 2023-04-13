@@ -11,19 +11,19 @@ library(shiny)
 
 shiny_start <- function() {
   countries <- get0("countries", envir = asNamespace("worldle"))
-  
+
   today <- lubridate::today()
   set.seed(as.numeric(today))
   todays_country_id <- sample(nrow(countries), 1)
-  
+
   iso_rda <- countries$iso_rda[todays_country_id]
   if (!file.exists(file.path("data", iso_rda))) {
     sf <- get_shapes(file.path("https://geodata.ucdavis.edu/gadm/gadm4.1/shp/",countries$links[todays_country_id]))
     sf <- thin(sf, 0.001)
   }
-  
+
   gg <- sf %>% ggplot() + geom_sf() + theme_void()
-  
+
   print(gg)
   print("Which country is it? ")
 }
@@ -35,7 +35,7 @@ shiny_guess(sf, countries$country.name.en[todays_country_id], attempt=1, guess="
 
 shiny_guess <- function(sf, name, attempt=1, guess="", unicode) {
   cat(sprintf("Attempt %d", attempt))
-  
+
   guess <- scan(what=character(), n=1)
   if (str_equal(tolower(name), tolower(guess))) {
     cat(sprintf("\nYou got it in %d attempts, congratulations!", attempt))
@@ -56,6 +56,11 @@ ui <- fluidPage(
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(
+
+      # Action button
+      actionButton("action", label = "Start"),
+
+
         sidebarPanel(
             sliderInput("bins",
                         "Number of bins:",
