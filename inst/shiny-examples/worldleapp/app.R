@@ -57,16 +57,18 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins
     sidebarLayout(
 
+
+
       # Action button
       actionButton("shiny_start", label = "Start"),
 
 
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+        selectInput("select", label = h3("Select box"),
+                     choices = list("Countries" = Countries_list$countries), # reminder need to load it
+                     selected = 1),
+
+
         ),
 
         # Show a plot of the generated distribution
