@@ -1,0 +1,27 @@
+Package: worldle
+Title: Guess a Country 
+Version: 0.0.0.9000
+Authors@R: 
+    person("Heike", "Hofmann", , "hofmann@iastate.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Let the user guess a country based on its shapefile.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    sf (>= 1.0-7),
+    rmapshaper (>= 0.4.5),
+    ggplot2,
+    dplyr,
+    stringr,
+    lubridate
+Suggests:
+    covr,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Depends: 
+    R (>= 2.10)
+LazyData: true
+Config/testthat/edition: 3

@@ -1,0 +1,8 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README.*$
+lab2-scripts
+docs
+^\.github$
+^codecov\.yml$
