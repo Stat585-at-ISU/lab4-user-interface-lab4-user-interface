@@ -24,32 +24,29 @@ shiny_start <- function() {
   
   gg <- sf %>% ggplot() + geom_sf() + theme_void()
   
+  print(gg)
+  print("Which country is it? ")
 }
 
 
 # move this somewhere else
 shiny_guess(sf, countries$country.name.en[todays_country_id], attempt=1, guess="", countries$unicode.symbol[todays_country_id])
 
-#' @importFrom dplyr `%>%`
-#' @importFrom ggplot2 ggplot theme_void geom_sf
-#' @importFrom stringr str_equal
+
 shiny_guess <- function(sf, name, attempt=1, guess="", unicode) {
+  cat(sprintf("Attempt %d", attempt))
   
-  print(gg)
-  if (attempt==1)
-    cat("Which country is it? ")
-  else {
-    cat(sprintf("%d. attempt", attempt))
-  }
   guess <- scan(what=character(), n=1)
   if (str_equal(tolower(name), tolower(guess))) {
     cat(sprintf("\nYou got it in %d attempts, congratulations!", attempt))
     return()
   }
-  if (attempt < 6) play(sf, name, attempt+1, guess, unicode)
-  else cat(sprintf("\nSo close! It is %s!", name))
 }
 
+
+shiny_quit <- function() {
+  cat(sprintf("\nSo close! It is %s!", name))
+}
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
