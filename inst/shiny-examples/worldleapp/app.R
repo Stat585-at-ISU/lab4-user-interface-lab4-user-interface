@@ -1,96 +1,72 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
+library(ggplot2)
+library(stringr)
+library(dplyr)
+source("scripts/get_shapes.R")
+source("scripts/thin.r")
 
-shiny_start <- function() {
-  countries <- get0("countries", envir = asNamespace("worldle"))
+# Define the country for today
+countries <- get0("countries", envir = asNamespace("worldle"))
+today <- lubridate::today()
+set.seed(as.numeric(today))
+todays_country_id <- sample(nrow(countries), 1)
+iso_rda <- countries$iso_rda[todays_country_id]
 
-  today <- lubridate::today()
-  set.seed(as.numeric(today))
-  todays_country_id <- sample(nrow(countries), 1)
-
-  iso_rda <- countries$iso_rda[todays_country_id]
-  if (!file.exists(file.path("data", iso_rda))) {
-    sf <- get_shapes(file.path("https://geodata.ucdavis.edu/gadm/gadm4.1/shp/",countries$links[todays_country_id]))
-    sf <- thin(sf, 0.001)
-  }
-
-  gg <- sf %>% ggplot() + geom_sf() + theme_void()
-
-  print(gg)
-  print("Which country is it? ")
-}
+name<-countries$country.name.en[todays_country_id]
+sf <- get_shapes(file.path("https://geodata.ucdavis.edu/gadm/gadm4.1/shp/",countries$links[todays_country_id]))
+sf <- thin(sf, 0.001)
 
 
-# move this somewhere else
-shiny_guess(sf, countries$country.name.en[todays_country_id], attempt=1, guess="", countries$unicode.symbol[todays_country_id])
+gg <- sf %>% ggplot() + geom_sf() + theme_void()
 
-
-shiny_guess <- function(sf, name, attempt=1, guess="", unicode) {
-  cat(sprintf("Attempt %d", attempt))
-
-  guess <- scan(what=character(), n=1)
-  if (str_equal(tolower(name), tolower(guess))) {
-    cat(sprintf("\nYou got it in %d attempts, congratulations!", attempt))
-    return()
-  }
-}
-
-
-shiny_quit <- function() {
-  cat(sprintf("\nSo close! It is %s!", name))
-}
-
-# Define UI for application that draws a histogram
+# Define the Shiny app UI
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Let's Play Shiny Wordle!"),
-
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-
-
-
-      # Action button
-      actionButton("shiny_start", label = "Start"),
-
-
-        sidebarPanel(
-        selectInput("select", label = h3("Select box"),
-                     choices = list("Countries" = Countries_list$countries), # reminder need to load it
-                     selected = 1),
-
-
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
+  titlePanel("Guess the Country!"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("guess", "Guess the Country:", choices = c(na.omit(countries$country.name.en))),
+      actionButton("submit", "Submit Guess"),
+      verbatimTextOutput("result"),
+      actionButton("quit", "Give Up"),
+      verbatimTextOutput("quit_result"),
+    ),
+    mainPanel(
+      plotOutput("gg")
     )
+  )
 )
 
-# Define server logic required to draw a histogram
-server <- function(input, output) {
+# Define the Shiny app server
+server <- function(input, output, session) {
+  # Initialize the number of guesses
+  guesses_left <- 5
 
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+  # Show the photo in the app
+  output$gg <- renderPlot({
+    gg
+  })
 
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    })
+  # Define the guess button action
+  observeEvent(input$submit, {
+    # Decrease the number of guesses left
+    guesses_left <<- guesses_left - 1
+
+    # Check if the guess is correct
+    if (tolower(input$guess) == tolower(name)) {
+      output$result <- renderText("Congratulations, you identified the Country!")
+    } else if (guesses_left > 0) {
+      output$result <- renderText(paste0("Wrong guess. \n You have ", guesses_left, " tries left."))
+    } else {
+      output$result <- renderText(paste0("Sorry, you ran out of tries \n The correct Country was \n '", name, "'."))
+    }
+  })
+  observeEvent(input$quit, {
+    if(input$quit >= 1){
+      output$quit_result <- renderText(paste0("The correct country was \n '", name, "'."))
+    }
+  })
 }
 
-# Run the application
-shinyApp(ui = ui, server = server)
+# Run the Shiny app
+shinyApp(ui, server)
 
