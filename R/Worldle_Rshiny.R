@@ -2,8 +2,8 @@ library(shiny)
 library(ggplot2)
 library(stringr)
 library(dplyr)
-source("R/get_shapes.R")
-source("R/thin.r")
+source("get_shapes.R")
+source("thin.r")
 
 # Define the country for today
 countries <- get0("countries", envir = asNamespace("worldle"))
@@ -27,6 +27,8 @@ ui <- fluidPage(
       selectInput("guess", "Guess the Country:", choices = c(na.omit(countries$country.name.en))),
       actionButton("submit", "Submit Guess"),
       verbatimTextOutput("result"),
+      actionButton("quit", "Give Up"),
+      verbatimTextOutput("quit_result"),
     ),
     mainPanel(
       plotOutput("gg")
@@ -56,6 +58,11 @@ server <- function(input, output, session) {
       output$result <- renderText(paste0("Wrong guess. \n You have ", guesses_left, " tries left."))
     } else {
       output$result <- renderText(paste0("Sorry, you ran out of tries \n The correct Country was \n '", name, "'."))
+    }
+  })
+  observeEvent(input$quit, {
+    if(input$quit >= 1){
+      output$quit_result <- renderText(paste0("The correct country was \n '", name, "'."))
     }
   })
 }
