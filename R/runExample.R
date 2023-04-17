@@ -1,3 +1,4 @@
+#' This function runs the shiny app for worldle
 #' @export
 runExample <- function() {
   appDir <- system.file("shiny-examples", "worldleapp",
