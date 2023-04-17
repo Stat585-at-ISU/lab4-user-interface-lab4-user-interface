@@ -21,7 +21,7 @@ gg <- sf %>% ggplot() + geom_sf() + theme_void()
 
 # Define the Shiny app UI
 ui <- fluidPage(
-  titlePanel("Guess the Coutnry!"),
+  titlePanel("Guess the Country!"),
   sidebarLayout(
     sidebarPanel(
       selectInput("guess", "Guess the Country:", choices = c(na.omit(countries$country.name.en))),
