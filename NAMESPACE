@@ -3,6 +3,7 @@
 export(get_shapes)
 export(mymean)
 export(play_worldle)
+export(runExample)
 export(thin)
 export(valid_url)
 importFrom(dplyr,`%>%`)
