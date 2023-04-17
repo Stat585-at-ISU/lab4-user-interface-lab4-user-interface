@@ -1,4 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/03nFXsNc)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -35,6 +34,12 @@ play_worldle()
 You will be shown a shapefile of a country, you have to guess by typing
 in the name of a country. See whether you can guess it!
 
+If you prefer, you can play worldle in a shiny app.
+
+``` r
+runExample()
+```
+
 Get the shapefile of a country:
 
 ``` r
@@ -64,3 +69,7 @@ austria %>% ggplot() + geom_sf() + theme_void()
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 Would you have guessed that this is Austria?
+
+(We commented out the test in `testthat/test-get_shapes.R` like we did
+in class because of the different versions. This helped us pass the R
+CMD check GitHub action.)
