@@ -53,11 +53,11 @@ server <- function(input, output, session) {
 
     # Check if the guess is correct
     if (tolower(input$guess) == tolower(name)) {
-      output$result <- renderText("Congratulations, you identified the Country!")
+      output$result <- renderText("Congratulations, you identified the country!")
     } else if (guesses_left > 0) {
       output$result <- renderText(paste0("Wrong guess. \n You have ", guesses_left, " tries left."))
     } else {
-      output$result <- renderText(paste0("Sorry, you ran out of tries \n The correct Country was \n '", name, "'."))
+      output$result <- renderText(paste0("Sorry, you ran out of tries \n The correct country was \n '", name, "'."))
     }
   })
   observeEvent(input$quit, {
