@@ -15,10 +15,10 @@ based on its shape.
 
 ## Installation
 
-You can install the development version of worldle like so:
+You can install our development version of worldle like so:
 
 ``` r
-remotes::install_github("Stat585-at-ISU/worldle")
+remotes::install_github("Stat585-at-ISU/lab4-user-interface-lab4-user-interface")
 ```
 
 ## Example
